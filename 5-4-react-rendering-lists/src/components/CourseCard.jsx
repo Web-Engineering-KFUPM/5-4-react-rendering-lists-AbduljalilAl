@@ -9,23 +9,36 @@ export default function CourseCard({ course, index, onMutateCourse }) {
 
   // 📘 TASK 4 — PART A (Anchor): Implement toggle using onMutateCourse + .map()
   function toggleTask(id) {
-    // TODO: toggle the task with this id
+    const updatedTasks = course.tasks.map((t) =>
+      t.id === id ? { ...t, isDone: !t.isDone } : t
+    );
+    onMutateCourse(course.id, { ...course, tasks: updatedTasks });
   }
 
 
   // 📘 TASK 4 — PART A (Anchor): Implement delete using onMutateCourse + .filter()
   function deleteTask(id) {
-    // TODO: delete the task with this id
-  }
+    const updatedTasks = course.tasks.filter((t) => t.id !== id);
+    onMutateCourse(course.id, { ...course, tasks: updatedTasks });  }
 
 
   // 📘 TASK 4 — PART A (Anchor): Implement add using onMutateCourse
   function addTask(e) {
     e.preventDefault();
-    // TODO: create a new task { id, title, dueDate: date, isDone: false }
-    // TODO: append it to existing tasks and reset inputs
-  }
+    if (!title.trim() || !date) return;
 
+    const newTask = {
+      id: Date.now(),
+      title: title.trim(),
+      dueDate: date,
+      isDone: false,
+    };
+      const updatedTasks = [...(course.tasks || []), newTask];
+    onMutateCourse(course.id, { ...course, tasks: updatedTasks });
+
+    setTitle("");
+    setDate("");
+  }
 
   return (
     <article className="course card">
@@ -41,6 +54,11 @@ export default function CourseCard({ course, index, onMutateCourse }) {
         {/* 🔎 Anchor: You’ll write your code right inside this list. */}
         <ul className="tasks">
           {/* TODO: course.tasks.map(task => <TaskItem key={task.id} task={task} onToggle={toggleTask} onDelete={deleteTask} />) */}
+                  {course.tasks && course.tasks.length > 0 ? (
+          course.tasks.map(task => <TaskItem key={task.id} task={task} onToggle={toggleTask} onDelete={deleteTask} />)
+        ) : (
+          <p>No tasks yet 📭</p>
+        )}
         </ul>
       </section>
 
